@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h2>Instrumentos</h2>
+<fieldset>
+    <legend>Nome do Instrumento e o seu Tipo</legend>
+    <form method="post">
+        <h4>Instrumento</h4>
+        <input type='text' name='instro' required>
+        <h4>Tipo</h4>
+        <input type='text' name='tipo' required>
+        <p><br></p>
+        <input type='submit' value="Submeter">
+    </form>
+</fieldset>
+{% if erro %}<h1>{{ erro }}</h1>{% endif %}
+{% endblock %}

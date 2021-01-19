@@ -21,6 +21,22 @@ def gravar(v1, v2, v3):
     ficheiro.close()
 
 
+def gravar2(v1, v2):
+    ficheiro = herokudb()
+    db = ficheiro.cursor()
+    db.execute("CREATE TABLE IF NOT EXISTS insto (instro text, tipo text)")
+    db.execute("INSERT INTO insto VALUES (%s, %s)", (v1, v2))
+    ficheiro.commit()
+    ficheiro.close()
+
+def gravar3(v1, v2, v3, v4):
+    ficheiro = herokudb()
+    db = ficheiro.cursor()
+    db.execute("CREATE TABLE IF NOT EXISTS arti (design text, descri text, quanti text, preço text)")
+    db.execute("INSERT INTO arti VALUES (%s, %s, %s, %s)", (v1, v2, v3, v4))
+    ficheiro.commit()
+    ficheiro.close()
+
 def existe(v1):
     try:
         ficheiro = herokudb()
@@ -32,6 +48,27 @@ def existe(v1):
         valor=None
     return valor
 
+def existe2(v1):
+    try:
+        ficheiro = herokudb()
+        db = ficheiro.cursor()
+        db.execute("SELECT * FROM insto WHERE nome = %s", (v1,))
+        valor = db.fetchone()
+        ficheiro.close()
+    except:
+        valor=None
+    return valor
+
+def existe3(v1):
+    try:
+        ficheiro = herokudb()
+        db = ficheiro.cursor()
+        db.execute("SELECT * FROM arti WHERE nome = %s", (v1,))
+        valor = db.fetchone()
+        ficheiro.close()
+    except:
+        valor=None
+    return valor
 
 def log(v1, v2):
     ficheiro = herokudb()
@@ -133,6 +170,31 @@ def newpasse():
     return render_template('newpasse.html', erro=erro)
 
 
+@app.route('/instrumento', methods=['GET', 'POST'])
+def instrumento():
+    erro = None
+    if request.method == 'POST':
+        v1 = request.form['instro']
+        v2 = request.form['tipo']
+        if existe2(v1):
+            erro = ' O instrumento já existe'
+        else:
+            gravar2(v1, v2)
+    return render_template('instrumento.html', erro=erro)
+
+@app.route('/artigos', methods=['GET', 'POST'])
+def artigos():
+    erro = None
+    if request.method == 'POST':
+        v1 = request.form['design']
+        v2 = request.form['descri']
+        v3 = request.form['quanti']
+        v4 = request.form['preço']
+        if existe3(v1):
+            erro = ' O Artigo já existe'
+        else:
+            gravar3(v1, v2, v3, v4)
+    return render_template('artigos.html', erro=erro)
 
 if __name__ == '__main__':
     app.run(debug=True)
